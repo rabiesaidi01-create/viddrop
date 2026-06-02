@@ -70,7 +70,10 @@ def download(job_id):
     job = jobs.get(job_id)
     if not job or not os.path.exists(job["path"]):
         return jsonify({"error": "Fichier introuvable ou expire"}), 404
+        
     return send_file(job["path"], as_attachment=True, download_name=job["title"] + "." + job["ext"])
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
