@@ -8,7 +8,7 @@ import time
 app = Flask(__name__)
 @app.route("/")
 def index():
-    return send_from_directory("C:\\viddrop", "index.html")
+return send_from_directory("/app", "index.html")
 CORS(app)
 DOWNLOAD_DIR = "/tmp/downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
