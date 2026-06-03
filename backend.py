@@ -10,8 +10,7 @@ app = Flask(__name__)
 def index():
     return send_from_directory("C:\\viddrop", "index.html")
 CORS(app)
-
-DOWNLOAD_DIR = "C:\\viddrop\\downloads"
+DOWNLOAD_DIR = "/tmp/downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 jobs = {}
