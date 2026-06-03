@@ -5,15 +5,18 @@ import os
 import uuid
 import threading
 import time
+
 app = Flask(__name__)
-@app.route("/")
-def index():
-return send_from_directory("/app", "index.html")
 CORS(app)
+
 DOWNLOAD_DIR = "/tmp/downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 jobs = {}
+
+@app.route("/")
+def index():
+    return send_from_directory("/app", "index.html")
 
 def cleanup_file(filepath, delay=3600):
     def _del():
@@ -39,17 +42,13 @@ def convert():
             "outtmpl": output_path + ".%(ext)s",
             "postprocessors": [{"key": "FFmpegExtractAudio", "preferredcodec": "mp3", "preferredquality": bitrate}],
             "quiet": True,
-            "ffmpeg_location": "C:\\ffmpeg2\\ffmpeg-8.1.1-essentials_build\\bin",
         }
     else:
-        res_map = {"4K": "2160", "1080p": "1080", "720p": "720", "480p": "480"}
-        res = res_map.get(quality, "1080")
         ydl_opts = {
             "format": "best",
             "outtmpl": output_path + ".%(ext)s",
             "merge_output_format": "mp4",
             "quiet": True,
-            "w": "C:\\ffmpeg2\\ffmpeg-8.1.1-essentials_build\\bin",
         }
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -68,7 +67,6 @@ def download(job_id):
     job = jobs.get(job_id)
     if not job or not os.path.exists(job["path"]):
         return jsonify({"error": "Fichier introuvable ou expire"}), 404
-        
     return send_file(job["path"], as_attachment=True, download_name=job["title"] + "." + job["ext"])
 
 if __name__ == "__main__":
